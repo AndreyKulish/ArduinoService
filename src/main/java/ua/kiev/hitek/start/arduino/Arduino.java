@@ -17,15 +17,28 @@ public class Arduino {
         this.serialPort = serialPort;
     }
 
-    public void writeDataArduino(String str) {
-        try {
-            serialPort.getSerialPort().writeBytes(str.getBytes());
-        } catch (Exception e){
-            e.printStackTrace();
+    public String writeDataArduino(String str) {
+        String dataFromArduino = new String();
+        synchronized (ArduinoReader.data) {
+            try {
+                serialPort.getSerialPort().writeBytes(str.getBytes());
+                System.out.println("Yfgbcfkb");
+                ArduinoReader.data.wait();
+                dataFromArduino = ArduinoReader.data.toString();
+                ArduinoReader.data.setLength(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        return dataFromArduino;
     }
 
-    public void closeArduino() throws Exception {
-        serialPort.getSerialPort().closePort();
+    public boolean closeArduino() {
+        try {
+            return serialPort.getSerialPort().closePort();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

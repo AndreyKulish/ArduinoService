@@ -1,11 +1,13 @@
 package ua.kiev.hitek.start.controllers;
 
+import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import ua.kiev.hitek.start.arduino.Arduino;
 
@@ -15,28 +17,42 @@ import java.util.Scanner;
 
 @Controller
 @RequestMapping(value = "/arduino")
+@RestController
 public class ArduinoController {
-    Arduino arduino;
+    private Arduino arduino;
+    private ApplicationContext applicationContext;
+    private JSONObject jsonObj;
 
-    public ArduinoController(){
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("AppConfig.xml");
-        arduino = (Arduino) applicationContext.getBean("arduino");
+    public ArduinoController() {
+        initNeededData();
     }
 
-    @GetMapping("/")
+    /*@GetMapping("/close")
     public ModelAndView index() {
         Map<String, String> model = new HashMap<>();
         model.put("name", "Alexey");
         return new ModelAndView("index", model);
+    }*/
+
+    @GetMapping("/stop")
+    public String stopArduino() {
+        boolean flag = arduino.closeArduino();
+        jsonObj.put("isCLose", flag);
+        arduino.closeArduino();
+        return jsonObj.toString();
     }
 
-    @GetMapping("/start")
-    public ModelAndView startArduino(@RequestParam String str) throws  Exception{
-        Map<String, String> model = new HashMap<>();
+    @GetMapping("/write")
+    public String startArduino(@RequestParam String str) throws Exception {
+        String dataFromArduino = arduino.writeDataArduino(str);
+        jsonObj.put("dataFromArduino", dataFromArduino);
+        return jsonObj.toString();
+    }
 
-        arduino.writeDataArduino(str);
+    private void initNeededData() {
+        applicationContext = new ClassPathXmlApplicationContext("AppConfig.xml");
 
-        model.put("name", str);
-        return new ModelAndView("index", model);
+        arduino = (Arduino) applicationContext.getBean("arduino");
+        jsonObj = new JSONObject();
     }
 }

@@ -5,7 +5,7 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 
 public class ArduinoReader implements SerialPortEventListener {
-    private String data;
+    public static volatile StringBuilder data = new StringBuilder();
     private SerialPort serialPort;
 
     public ArduinoReader(){
@@ -17,13 +17,16 @@ public class ArduinoReader implements SerialPortEventListener {
 
     @Override
     public void serialEvent(SerialPortEvent event) {
-        if (event.isRXCHAR() && event.getEventValue() > 0) {
-            try {
-                Thread.sleep(1000);
-                data = serialPort.readString(event.getEventValue());
-                System.out.println("Arduino say => " + data);
-            } catch (Exception ex) {
-                System.out.println("Error in receiving string from COM-port: " + ex);
+        synchronized (ArduinoReader.data) {
+            if (event.isRXCHAR() && event.getEventValue() > 0) {
+                try {
+                    Thread.sleep(1000);
+                    data.append(serialPort.readString(event.getEventValue()));
+                    //System.out.println("Arduino say => " + data);
+                    data.notify();
+                } catch (Exception ex) {
+                    System.out.println("Error in receiving string from COM-port: " + ex);
+                }
             }
         }
     }
