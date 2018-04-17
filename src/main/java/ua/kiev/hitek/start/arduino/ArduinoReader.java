@@ -5,19 +5,14 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 
 public class ArduinoReader implements SerialPortEventListener {
-    private String data = "";
+    private String data;
     private SerialPort serialPort;
 
-    public ArduinoReader(SerialPort serialPort) {
+    public ArduinoReader(){
+    }
+
+    public void setSerialPort(SerialPort serialPort) {
         this.serialPort = serialPort;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
     }
 
     @Override
@@ -26,7 +21,7 @@ public class ArduinoReader implements SerialPortEventListener {
             try {
                 Thread.sleep(1000);
                 data = serialPort.readString(event.getEventValue());
-                System.out.println(data);
+                System.out.println("Arduino say => " + data);
             } catch (Exception ex) {
                 System.out.println("Error in receiving string from COM-port: " + ex);
             }

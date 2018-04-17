@@ -20,7 +20,6 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScan("ua.kiev.hitek.start")
 @PropertySource("classpath:app.properties")
-@EnableJpaRepositories("ua.kiev.hitek.start.entity.repository")
 public class DataConfig {
 
     private static final String PROP_DATABASE_DRIVER = "db.driver";

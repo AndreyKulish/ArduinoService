@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="arduino" class="ua.kiev.hitek.start.arduino.Arduino" depends-on="arduinoSerialPort">
+        <constructor-arg ref="arduinoSerialPort"/>
+
+    </bean>
+
+    <bean id="arduinoSerialPort" class="ua.kiev.hitek.start.arduino.ArduinoSerialPort" depends-on="arduinoReader">
+        <constructor-arg value="9600"/>
+        <constructor-arg value="8"/>
+        <constructor-arg value="1"/>
+        <constructor-arg value="0"/>
+        <constructor-arg value="/dev/ttyUSB0"/>
+        <constructor-arg ref="arduinoReader"/>
+    </bean>
+
+    <bean id="arduinoReader" class="ua.kiev.hitek.start.arduino.ArduinoReader">
+
+    </bean>
+
+
+</beans>
