@@ -8,12 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import ua.kiev.hitek.start.arduino.Arduino;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 
 @Controller
 @RequestMapping(value = "/arduino")
@@ -43,7 +38,7 @@ public class ArduinoController {
     }
 
     @GetMapping("/write")
-    public String startArduino(@RequestParam String str) throws Exception {
+    public String startArduino(@RequestParam String str) {
         String dataFromArduino = arduino.writeDataArduino(str);
         jsonObj.put("dataFromArduino", dataFromArduino);
         return jsonObj.toString();

@@ -37,7 +37,7 @@ public class Arduino {
         try {
             return serialPort.getSerialPort().closePort();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Port close :" + e.getMessage());
         }
         return false;
     }
