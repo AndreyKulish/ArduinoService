@@ -33,6 +33,10 @@ public class Arduino {
         return dataFromArduino;
     }
 
+    public boolean connectArduino(){
+        return serialPort.reconnectArduino();
+    }
+
     public boolean closeArduino() {
         try {
             return serialPort.getSerialPort().closePort();

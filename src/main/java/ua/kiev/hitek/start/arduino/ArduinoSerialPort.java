@@ -25,7 +25,7 @@ public class ArduinoSerialPort {
         initConnectionToArduino();
     }
 
-    private void initConnectionToArduino() {
+    private boolean initConnectionToArduino() {
         try {
             serialPort = new SerialPort(portName);
             arduinoReader.setSerialPort(serialPort);
@@ -44,9 +44,19 @@ public class ArduinoSerialPort {
             serialPort.addEventListener(arduinoReader, SerialPort.MASK_RXCHAR);
 
             System.out.println("Arduino Started!!!");
+
+            return true;
         }catch (Exception e){
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public boolean reconnectArduino(){
+        if(serialPort.isOpened()){
+            return true;
+        }
+        return initConnectionToArduino();
     }
 
     public SerialPort getSerialPort() {
